@@ -1,0 +1,20 @@
+# Secrets - NEVER commit these
+.env
+.env.*
+!.env.example
+*.session
+*.session-journal
+session_string.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
