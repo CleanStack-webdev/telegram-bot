@@ -61,7 +61,7 @@ def command(name: str) -> Callable[[Handler], Handler]:
 async def cmd_help(ctx: Context) -> None:
     await ctx.reply(
         "<b>Group tagger</b>\n"
-        "/tagall — mention every member of this group (admins only by default)\n"
+        "/all — mention every member of this group (admins only by default)\n"
         "/chatid — show this chat's ID"
     )
 
@@ -82,7 +82,7 @@ async def _is_allowed(ctx: Context) -> bool:
     msg = ctx.message
     sender_chat = msg.get("sender_chat") or {}
     sender_id = (msg.get("from") or {}).get("id")
-    if sender_chat.get("id") == ctx.chat_id or sender_id == GROUP_ANONYMOUS_BOT_ID:
+    if sender_chat.get("id") == ctx.chat_id or sender_id == GROUP_ANONYmoUS_BOT_ID:
         return True                                   # anonymous admin posting as the group
     if sender_id is None:
         return False
@@ -90,15 +90,16 @@ async def _is_allowed(ctx: Context) -> bool:
     return member.get("status") in {"creator", "administrator"}
 
 
+@command("all")
 @command("tagall")
-async def cmd_tagall(ctx: Context) -> None:
+async def cmd_all(ctx: Context) -> None:
     if ctx.chat_type == "private":
-        await ctx.reply("ℹ️ /tagall only works inside a group or supergroup. Add me to your group and run it there.")
+        await ctx.reply("ℹ️ /all only works inside a group or supergroup. Add me to your group and run it there.")
         return
     if ctx.chat_type == "channel":
         return
     if not await _is_allowed(ctx):
-        await ctx.reply("⛔ Only group admins can use /tagall.")
+        await ctx.reply("⛔ Only group admins can use /all.")
         return
 
     cooldown = ctx.deps.settings.all_cooldown_seconds
@@ -109,7 +110,7 @@ async def cmd_tagall(ctx: Context) -> None:
     async with lock:
         remaining = cooldown - (time.monotonic() - _last_run.get(ctx.chat_id, float("-inf")))
         if remaining > 0:
-            await ctx.reply(f"⏱ Please wait {int(remaining) + 1}s before running /tagall again.")
+            await ctx.reply(f"⏱ Please wait {int(remaining) + 1}s before running /all again.")
             return
         _last_run[ctx.chat_id] = time.monotonic()
         await _run_all(ctx)
