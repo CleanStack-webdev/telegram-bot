@@ -19,7 +19,7 @@ from .mentions import build_messages
 
 log = logging.getLogger(__name__)
 
-GROUP_ANONYMOUS_BOT_ID = 1087968824   # Telegram's stand-in sender for anonymous admins
+GROUP_ANONYMOUS_BOT_ID = 1087968824 # Telegram's stand-in sender for anonymous admins
 SEND_DELAY = 1.3                    # seconds between messages; groups tolerate ~20 msgs/minute
 
 
@@ -82,8 +82,8 @@ async def _is_allowed(ctx: Context) -> bool:
     msg = ctx.message
     sender_chat = msg.get("sender_chat") or {}
     sender_id = (msg.get("from") or {}).get("id")
-    if sender_chat.get("id") == ctx.chat_id or sender_id == GROUP_ANONYmoUS_BOT_ID:
-        return True                                   # anonymous admin posting as the group
+    if sender_chat.get("id") == ctx.chat_id or sender_id == GROUP_ANONYMOUS_BOT_ID:
+        return True      # anonymous admin posting as the group
     if sender_id is None:
         return False
     member = await ctx.deps.bot.get_chat_member(ctx.chat_id, sender_id)
